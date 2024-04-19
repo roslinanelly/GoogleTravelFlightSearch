@@ -1,7 +1,9 @@
 package org.interview.steps.searchflights;
 
+import io.cucumber.datatable.DataTable;
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
+import io.cucumber.java.DataTableType;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -9,9 +11,10 @@ import io.cucumber.java.en.When;
 import org.interview.travelpage.SearchPage;
 import org.interview.travelpage.ResultsPage;
 import org.junit.Assert;
-import org.openqa.selenium.*;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.util.List;
+import java.util.Map;
+
 
 public class GoogleFlightSearch {
 
@@ -23,8 +26,9 @@ public class GoogleFlightSearch {
         searchPage = new SearchPage(5000);
     }
 
-    @Given("^The Google Travel Flight Search page loaded successfully$")
-    public void theGoogleTravelFlightSearchPageLoadedSuccessfully() {
+
+    @Given("^The Google Travel Flight Search page is loaded successfully$")
+    public void theGoogleTravelFlightSearchPageIsLoadedSuccessfully() {
         Assert.assertTrue(searchPage.hasExploreButton());
     }
 
@@ -57,34 +61,57 @@ public class GoogleFlightSearch {
     }
 
     @Then("Flight results will be returned on the search results page")
-    public void flightResultsWillBeReturnedAsExpected() throws InterruptedException {
+    public void flightResultsWillBeReturnedAsExpected() {
         Assert.assertEquals("Search results", resultsPage.getSearchResults());
-        Assert.assertTrue(resultsPage.getResultsSummary().contains("results returned"));
+        Assert.assertTrue(resultsPage.getResultsSummary().matches(".*[0-9]+ results returned."));
     }
 
-    @When("User updates {string}")
-    public void userUpdates(String arg0) {
+    @Then("No flight results will be returned on the search results page")
+    public void noFlightResultsWillBeReturnedAsExpected() {
+        Assert.assertEquals("Search results", resultsPage.getSearchResults());
+        Assert.assertTrue(resultsPage.getResultsSummary().contains("No results returned"));
+
     }
 
-    @And("User updates number of {string} to {int}")
-    public void userUpdatesNumberOfToNumberOfPassengers(String arg0, int arg1) {
+    @When("User updates ticket type {string}")
+    public void userUpdatesTicketType(String ticketType) {
+        searchPage.setTicketType(ticketType);
     }
 
-    @Then("User can only enter {string} and {string} and {string} and selects Explore button")
-    public void userCanOnlyEnterAndAndAndSelectsExploreButton(String arg0, String arg1, String arg2) {
+    @And("User updates passenger type {string} to {int}")
+    public void userUpdatesPassengerTypeToNumberOfPassengers(String passengerType, int number) {
+        searchPage.updatePassengerTypeToNumber(passengerType, number);
     }
 
-    @And("Default ticket settings are used for  passengerType, numberOfPassengers, and ticketClassType")
-    public void defaultTicketSettingsAreUsedForPassengerTypeNumberOfPassengersAndTicketClassType() {
+    @And("User updates ticket class {string}")
+    public void userUpdatesTicketClass(String ticketClass) {
+        searchPage.setTicketClass(ticketClass);
     }
 
-    @Then("User can add multiple {string} and {string} and {string}")
-    public void userCanAddMultipleAndAnd(String arg0, String arg1, String arg2) {
+    @Then("User can only enter {string} and {string} and {string}")
+    public void userCanOnlyEnterAndAnd(String origin, String destination, String departureDate) throws InterruptedException {
+        searchPage.setOrigin(origin);
+        searchPage.setDestination(destination);
+
+        Thread.sleep(5000); // This has to wait for the browser to settle airport picking choices.
+
+        searchPage.setDepartureDate(departureDate);
+
+        // This should not be found:
+        Assert.assertTrue(searchPage.hasNoReturnDate());
     }
 
-    @And("User can remove multiple {string} and {string} and {string}")
-    public void userCanRemoveMultipleAndAnd(String arg0, String arg1, String arg2) {
+
+    @Then("User can add multiple flights")
+    public void userCanAddMultipleFlights(DataTable dataTable) {
+
     }
+
+    @And("User can remove selected flight")
+    public void userCanRemoveSelectedFlight() {
+
+    }
+
 
     @After
     public void cleanUp() {
