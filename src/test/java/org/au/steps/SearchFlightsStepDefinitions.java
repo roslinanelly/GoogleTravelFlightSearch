@@ -1,22 +1,19 @@
-package org.interview.steps.searchflights;
+package org.au.steps;
 
-import io.cucumber.datatable.DataTable;
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
-import io.cucumber.java.DataTableType;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import org.interview.travelpage.SearchPage;
-import org.interview.travelpage.ResultsPage;
+import org.au.travelpage.SearchPage;
+import org.au.travelpage.ResultsPage;
 import org.junit.Assert;
 
-import java.util.List;
-import java.util.Map;
-
-
-public class GoogleFlightSearch {
+/**
+ * Step Definition class for searchflights feature test
+ */
+public class SearchFlightsStepDefinitions {
 
     SearchPage searchPage;
     ResultsPage resultsPage; // NB! This is loaded by clicking the explore button on the search page.
@@ -34,18 +31,14 @@ public class GoogleFlightSearch {
 
     @And("Default ticket settings are used")
     public void defaultTicketSettingsAreUsed() {
-        // found element value = Round trip, 1, Economy
 
-        // System.out.println("Ticket Type: " + searchPage.ticketType());
         Assert.assertEquals("Round trip", searchPage.getTicketType());
-        // System.out.println("Number of Passengers: " + searchPage.numberOfPassengers());
         Assert.assertEquals("1", searchPage.getNumberOfPassengers());
-        // System.out.println("Ticket Class: " + searchPage.ticketClass());
         Assert.assertEquals("Economy", searchPage.getTicketClass());
     }
 
     @When("User enters valid {string} and {string} and {string} and {string}")
-    public void userEntersValidOriginAndDestinationAndDepartureAndReturn(String origin, String destination, String departureDate, String returnDate) throws InterruptedException {
+    public void userEntersValidOriginDestinationDepartureReturnDates(String origin, String destination, String departureDate, String returnDate) throws InterruptedException {
         searchPage.setOrigin(origin);
         searchPage.setDestination(destination);
 
@@ -89,7 +82,7 @@ public class GoogleFlightSearch {
     }
 
     @Then("User can only enter {string} and {string} and {string}")
-    public void userCanOnlyEnterAndAnd(String origin, String destination, String departureDate) throws InterruptedException {
+    public void userCanOnlyEnterOriginDestinationDepartureDate(String origin, String destination, String departureDate) throws InterruptedException {
         searchPage.setOrigin(origin);
         searchPage.setDestination(destination);
 
@@ -100,18 +93,6 @@ public class GoogleFlightSearch {
         // This should not be found:
         Assert.assertTrue(searchPage.hasNoReturnDate());
     }
-
-
-    @Then("User can add multiple flights")
-    public void userCanAddMultipleFlights(DataTable dataTable) {
-
-    }
-
-    @And("User can remove selected flight")
-    public void userCanRemoveSelectedFlight() {
-
-    }
-
 
     @After
     public void cleanUp() {
