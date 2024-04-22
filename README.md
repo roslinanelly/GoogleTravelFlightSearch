@@ -43,6 +43,6 @@ for example:
     
    Test Report will be generated in \GoogleTravelFlightSearch\target\site\serenity\index.html
 
-3. To run test manually in IDE: run \GoogleTravelFlightSearch\src\test\java\org\interview\regression\TestRunner.java
+3. To run test manually in IDE: run \GoogleTravelFlightSearch\src\test\java\org\au\regression\TestRunner.java
 4. Feature file: \GoogleTravelFlightSearch\src\test\resources\features\searchflights.feature
-5. Step Definitions: \GoogleTravelFlightSearch\src\test\java\org\interview\steps\searchflights\SearchFlightsStepDefinitions.java
+5. Step Definitions: \GoogleTravelFlightSearch\src\test\java\org\au\steps\SearchFlightsStepDefinitions.java
